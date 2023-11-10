@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Rendez vous permis</title>
+</head>
+
+<body>
+  <div id="app">
+
+  </div>
+  <script>
+    const POINT_TEMPLATE = `
+      <div>
+      <h1>PT_NAME</h1>
+      <ul>
+      CONTENT
+      </ul>
+      
+      </div>
+
+      
+    `
+    async function poll() {
+      let data = await fetch("/app");
+      let body = await data.json();
+      let keys = Object.keys(body);
+      keys.forEach(pt => {
+        let node = POINT_TEMPLATE.replace("PT_NAME", pt)
+        const list = body[pt];
+        let list_str = "";
+        list.forEach(hour => {
+          const humanReadableDate = new Date(hour).toLocaleString();
+          list_str += ("<li>" + humanReadableDate + "</h1>");
+        })
+        node = node.replace("CONTENT", list_str)
+        document.getElementById("app").innerHTML += node;
+      })
+
+    }
+    poll();
+  </script>
+</body>
+
+</html>
